@@ -1,0 +1,692 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "API publique de La Ruche Qui Dit Oui",
+        "description": "Description des requête à l'API récupérées à partir du navigateur.\n"
+    },
+    "host": "api.thefoodassembly.com",
+    "schemes": [
+        "https"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "paths": {
+        "/oauth/v2/token": {
+            "post": {
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "parameters": [
+                    {
+                        "name": "client_id",
+                        "in": "formData",
+                        "description": "Client ID (web : '1_52orz4s96icc88k8ocs4ogcog88w8co4scckkcog0404w004o8')",
+                        "required": true,
+                        "type": "string",
+                        "default": "1_52orz4s96icc88k8ocs4ogcog88w8co4scckkcog0404w004o8"
+                    },
+                    {
+                        "name": "client_secret",
+                        "in": "formData",
+                        "description": "Client Secret (web : 'May the Force be with you, always.')",
+                        "required": true,
+                        "type": "string",
+                        "default": "May the Force be with you, always."
+                    },
+                    {
+                        "name": "grant_type",
+                        "in": "formData",
+                        "description": "Client ID (web : 'password' ou 'refresh_token')",
+                        "required": true,
+                        "type": "string",
+                        "enum": [
+                            "password",
+                            "refresh_token"
+                        ],
+                        "default": "password"
+                    },
+                    {
+                        "name": "username",
+                        "in": "formData",
+                        "description": "Username",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "Password",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "access_token",
+                        "in": "formData",
+                        "type": "string",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "schema": {
+                            "items": [
+                                {
+                                    "name": "access_token",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "expires_in",
+                                    "type": "number"
+                                },
+                                {
+                                    "name": "token_type",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "scope"
+                                },
+                                {
+                                    "name": "refresh_token",
+                                    "type": "string"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/distributions/{id}": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of distribution",
+                        "required": true,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "distribution response",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Distribution"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/distributions/{id}/basket": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of distribution",
+                        "required": true,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "basket response",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Basket"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/distributions/{id}/product_types": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of distribution",
+                        "required": true,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "product types",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/ProductType"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/distributions/{id}/products": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of distribution",
+                        "required": true,
+                        "type": "number"
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "page to fetch",
+                        "required": false,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "product types",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "products": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Product"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/hives": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "summary",
+                        "in": "query",
+                        "description": "page to fetch",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "name": "coordinates[latitude]",
+                        "in": "query",
+                        "description": "latitude",
+                        "required": false,
+                        "type": "number",
+                        "format": "float"
+                    },
+                    {
+                        "name": "coordinates[longitude]",
+                        "in": "query",
+                        "description": "latitude",
+                        "required": false,
+                        "type": "number",
+                        "format": "float"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "product types",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Hive"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/hives/{hiveId}/discussions": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "hiveId",
+                        "in": "path",
+                        "description": "Hive ID",
+                        "required": true,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "discussions",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Discussion"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/hives/{hiveId}/farms": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "hiveId",
+                        "in": "path",
+                        "description": "Hive ID",
+                        "required": true,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "farms",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Farm"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/hives/{hiveId}/members": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "hiveId",
+                        "in": "path",
+                        "description": "Hive ID",
+                        "required": true,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "farms",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/Member"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/users/{userId}/email_notification_setting": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User settings",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/users/{userUUID}/invoices": {
+            "get": {
+                "parameters": [
+                    {
+                        "name": "userUUID",
+                        "in": "path",
+                        "description": "User UUID",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User Invoices",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/private_conversations/": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Conversations",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "/me/": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "User details",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "Distribution": {
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "isOpenable": {
+                    "type": "string"
+                },
+                "distributionDate": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "timeStart": {
+                    "type": "string"
+                },
+                "timeEnd": {
+                    "type": "string"
+                },
+                "saleEndDate": {
+                    "type": "string"
+                },
+                "hiveId": {
+                    "type": "number"
+                },
+                "saleOpenMessage": {
+                    "type": "string"
+                },
+                "transient": {
+                    "type": "string"
+                },
+                "_links": {
+                    "type": "object"
+                },
+                "hive": {
+                    "type": "object"
+                }
+            }
+        },
+        "Basket": {
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "countItems": {
+                    "type": "number"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "state": {
+                    "type": "number"
+                },
+                "_links": {
+                    "type": "object"
+                },
+                "totalPrice": {
+                    "type": "object",
+                    "$ref": "#/definitions/Price"
+                },
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Item"
+                    }
+                }
+            }
+        },
+        "Price": {
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "currency": {
+                    "type": "string"
+                }
+            }
+        },
+        "Item": {
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "number"
+                },
+                "quantityUnit": {
+                    "type": "string"
+                },
+                "wasDelivered": {
+                    "type": "boolean"
+                },
+                "quantityStrategy": {
+                    "type": "string"
+                },
+                "isCanceled": {
+                    "type": "boolean"
+                },
+                "orderDate": {
+                    "type": "string"
+                },
+                "totalPrice": {
+                    "type": "object",
+                    "$ref": "#/definitions/Price"
+                },
+                "offer": {
+                    "type": "object",
+                    "$ref": "#/definitions/Offer"
+                },
+                "product": {
+                    "type": "object",
+                    "$ref": "#/definitions/Product"
+                }
+            }
+        },
+        "Offer": {
+            "properties": {
+                "uuid": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "number"
+                },
+                "reference": {
+                    "type": "string"
+                },
+                "isAvailable": {
+                    "type": "boolean"
+                },
+                "count": {
+                    "type": "object"
+                },
+                "productId": {
+                    "type": "number"
+                },
+                "farmId": {
+                    "type": "number"
+                },
+                "hasBeenSold": {
+                    "type": "boolean"
+                },
+                "price": {
+                    "type": "object",
+                    "$ref": "#/definitions/Price"
+                },
+                "quantity": {
+                    "type": "object",
+                    "properties": {
+                        "amount": {
+                            "type": "number"
+                        },
+                        "currency": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "ProductType": {
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "categoryKey": {
+                    "type": "string"
+                },
+                "categoryId": {
+                    "type": "number"
+                },
+                "categoryName": {
+                    "type": "string"
+                },
+                "subCategoryKey": {
+                    "type": "string"
+                },
+                "subCategoryId": {
+                    "type": "number"
+                },
+                "subCategoryName": {
+                    "type": "string"
+                }
+            }
+        },
+        "Product": {
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "_links": {
+                    "type": "object"
+                },
+                "photo": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "mimeType": {
+                            "type": "string"
+                        },
+                        "_links": {
+                            "type": "object"
+                        }
+                    }
+                }
+            }
+        },
+        "Hive": {
+            "properties": {
+                "id": {
+                    "type": "number"
+                }
+            }
+        },
+        "Discussion": {
+            "properties": {
+                "id": {
+                    "type": "number"
+                }
+            }
+        },
+        "Farm": {
+            "properties": {
+                "id": {
+                    "type": "number"
+                }
+            }
+        },
+        "Member": {
+            "properties": {
+                "id": {
+                    "type": "number"
+                }
+            }
+        }
+    }
+}
